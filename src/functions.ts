@@ -2,7 +2,10 @@ import { getCountryNamesWithCodes, returnValueOrFalse } from "./constants/consta
 import { ICityObject, countryData } from "./types";
 import { readFileSync } from "fs";
 
-const jsonData = JSON.parse(readFileSync("json/update.json").toString("utf-8")) as any;
+const jsonData = require("../json/update.json");
+console.log("jsonData :", jsonData);
+
+// const jsonData = JSON.parse(readFileSync("json/update.json").toString("utf-8")) as any;
 // const tempJsonData = JSON.parse(readFileSync("json/temp.json").toString("utf-8")) as any;
 
 export const AllCountries = getCountryNamesWithCodes(jsonData.data);
