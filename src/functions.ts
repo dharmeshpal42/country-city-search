@@ -3,9 +3,9 @@ import { ICityObject, countryData } from "./types";
 import { readFileSync } from "fs";
 
 const jsonData = JSON.parse(readFileSync("json/update.json").toString("utf-8")) as any;
-const tempJsonData = JSON.parse(readFileSync("json/temp.json").toString("utf-8")) as any;
+// const tempJsonData = JSON.parse(readFileSync("json/temp.json").toString("utf-8")) as any;
 
-export const CountryNames = getCountryNamesWithCodes(jsonData.data);
+export const AllCountries = getCountryNamesWithCodes(jsonData.data);
 
 export const getCityByNameAndCountryData = (countryData: countryData) => {
   const { cityName, state_name, country_name } = countryData;
