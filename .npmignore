@@ -1,6 +1,6 @@
 /src
 /node_modules
-/json
+
 
 .env
 .DS_Store
