@@ -1,5 +1,5 @@
 {
-  "name": "country-timezones",
+  "name": "country-city-search",
   "description": "Usefull to get timezone Names for all the countries,city's and states",
   "version": "0.0.1",
   "main": "./dist/index.js",
@@ -20,6 +20,7 @@
   "author": "Dharmesh pal",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^20.14.10",
     "tsup": "^8.1.0",
     "typescript": "^5.5.3"
   }

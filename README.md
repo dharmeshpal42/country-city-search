@@ -4,6 +4,10 @@
 
 In the project directory, you can run:
 
+install Node type
+
+## npm install --save-dev @types/node
+
 ### `npm install`
 
 ### `npm run build`
