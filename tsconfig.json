@@ -3,6 +3,7 @@
     "typeRoots": ["node_modules/@types", "./types"],
     "strict": true,
     "noImplicitAny": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "strictNullChecks": true,
     "target": "ES2023",
