@@ -6,8 +6,8 @@ name: Node.js Package
 on:
   pull_request:
     types: [closed]
-    branches: 
-       - master   
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
