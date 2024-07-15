@@ -1,17 +1,39 @@
-import { getCountryNamesWithCodes, returnValueOrFalse } from "./constants/constant";
+import { csvToJson, getCountryNamesWithCodes, returnValueOrFalse } from "./constants/constant";
 import { ICityObject, countryData } from "./types";
 
-let jsonData: any;
+let fetchedData: any = null; // Flag to store fetched data
+let isFetching = false;
 
-// https://drive.google.com/file/d/13y1piefeU8Qin6h3AWOViLmGxRM-bzlg/view?usp=drive_link === tempJson
-// https://drive.google.com/file/d/1YbBIVdPFRFpx88bPAxZY8LeXnsIFx7cV/view?usp=drive_link === update.json
+// Fetch Data by CSV
 
 async function fetchDataAndProcess() {
+  if (fetchedData !== null) {
+    // If data is already fetched, return it
+    return fetchedData;
+  }
+
+  if (isFetching) {
+    // If fetching is in progress, wait for it to complete
+    return new Promise((resolve, reject) => {
+      const interval = setInterval(() => {
+        if (fetchedData !== null) {
+          clearInterval(interval);
+          resolve(fetchedData);
+        } else if (!isFetching) {
+          clearInterval(interval);
+          reject(new Error("Fetching failed"));
+        }
+      }, 100);
+    });
+  }
+
+  isFetching = true;
+
   try {
-    const url = "https://drive.google.com/uc?export=download&id=13y1piefeU8Qin6h3AWOViLmGxRM-bzlg";
+    const url = "https://country-city-search.s3.eu-north-1.amazonaws.com/data.csv";
     const response = await fetch(url, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "text/csv",
       },
     });
 
@@ -19,72 +41,70 @@ async function fetchDataAndProcess() {
       throw new Error(`Network response was not ok: ${response.statusText}`);
     }
 
-    const jsonDatas = await response.json();
-    jsonData = jsonDatas; // Store the parsed JSON data
-
-    // Optional: Example processing
-    const processedData = processJsonData(jsonData);
-
-    return processedData; // Return any processed data if needed
+    const csvData = await response.text();
+    const parsedData = csvToJson(csvData);
+    fetchedData = processJsonData(parsedData);
+    return fetchedData;
   } catch (error) {
     console.error("Error fetching or parsing JSON:", error);
-    throw error; // Re-throw the error
+    throw error;
+  } finally {
+    isFetching = false;
   }
 }
 function processJsonData(jsonData: any) {
   // Process jsonData here if needed
   return jsonData;
 }
+//----------------------------------------------//
 
-// export async function getCitiesByStateAndCountry(state_name: string, country_name: string): Promise<string[] | boolean> {
-//   await fetchDataAndProcess(); // Wait for jsonData to be fetched
+// Search City by it's Name
+export async function searchCityByName(cityName: string): Promise<any[]> {
+  const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
 
-//   const filteredCities = jsonData.data.filter((city: any) => city.state_name.toLowerCase() === state_name.toLowerCase() && city.country_name.toLowerCase() === country_name.toLowerCase()).map((city: any) => city);
+  const lowerCaseCityName = cityName.toLowerCase();
 
-//   return returnValueOrFalse(filteredCities);
-// }
+  const exactMatches = jsonData.filter((city: any) => city?.name?.toLowerCase() === lowerCaseCityName);
 
-// export async function searchCityByName(cityName: string): Promise<any[]> {
-//   await fetchDataAndProcess(); // Wait for jsonData to be fetched
+  const partialMatches = jsonData.filter((city: any) => city?.name?.toLowerCase().includes(lowerCaseCityName) && city?.name?.toLowerCase() !== lowerCaseCityName);
 
-//   const lowerCaseCityName = cityName.toLowerCase();
-//   const exactMatches = jsonData.data.filter((city: any) => city.name.toLowerCase() === lowerCaseCityName);
+  return [...exactMatches, ...partialMatches];
+}
 
-//   // Partial matches excluding exact matches
-//   const partialMatches = jsonData.data.filter((city: any) => city.name.toLowerCase().includes(lowerCaseCityName) && city.name.toLowerCase() !== lowerCaseCityName);
+//----------------------------------------------//
 
-//   return [...exactMatches, ...partialMatches];
-// }
+//Get All Country's Name in single array with country code
 
 export async function getAllCountries(): Promise<any> {
-  const js = await fetchDataAndProcess(); // Wait for jsonData to be fetched
-  // console.log("getAllCountries  ~ js:", js);
-  const data = getCountryNamesWithCodes(js.data);
+  const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
+  const data = getCountryNamesWithCodes(jsonData);
   return data;
 }
 
-// export const AllCountries = getCountryNamesWithCodes(jsonData.data);
+//----------------------------------------------//
 
-// export const getCityByNameAndCountryData = (countryData: countryData) => {
-//   const { cityName, state_name, country_name } = countryData;
+//Get City object using city name, state name and country name
 
-//   const foundedCity = jsonData.data.find((item: ICityObject) => item.country_name.toLowerCase() === country_name.toLowerCase() && (state_name ? item.state_name.toLowerCase() === state_name.toLowerCase() : true) && item.name.toLowerCase() === cityName.toLowerCase());
-//   return returnValueOrFalse(foundedCity);
-// };
+export const getCityByNameAndCountryData = async (countryData: countryData) => {
+  const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
 
-// export const getCitiesByStateAndCountry = (state_name: string, country_name: string): string[] | boolean => {
-//   const filteredCities = jsonData.data.filter((city: ICityObject) => city.state_name.toLowerCase() === state_name.toLowerCase() && city.country_name.toLowerCase() === country_name.toLowerCase()).map((city: ICityObject) => city);
-//   return returnValueOrFalse(filteredCities);
-// };
+  const { cityName, state_name, country_name } = countryData;
 
-// export const searchCityByName = (cityName: string) => {
-//   const lowerCaseCityName = cityName.toLowerCase();
-//   const exactMatches = jsonData.data.filter((city: ICityObject) => city.name.toLowerCase() === lowerCaseCityName);
+  const foundedCity = jsonData.find((item: ICityObject) => {
+    return item?.country_name?.toLowerCase() === country_name?.toLowerCase() && (state_name ? item?.state_name?.toLowerCase() === state_name?.toLowerCase() : true) && item?.name?.toLowerCase() === cityName?.toLowerCase();
+  });
 
-//   // Partial matches excluding exact matches
-//   const partialMatches = jsonData.data.filter((city: ICityObject) => city.name.toLowerCase().includes(lowerCaseCityName) && city.name.toLowerCase() !== lowerCaseCityName);
+  return returnValueOrFalse(foundedCity);
+};
+//----------------------------------------------//
 
-//   return [...exactMatches, ...partialMatches];
-// };
+// Get List array of cities object using state and country name
 
-// console.log(searchCityByName("london"));
+export const getCitiesByStateAndCountry = async (state_name: string, country_name: string) => {
+  const jsonData = await fetchDataAndProcess();
+
+  const filteredCities = jsonData.filter((city: ICityObject) => city?.state_name?.toLowerCase() === state_name?.toLowerCase() && city?.country_name?.toLowerCase() === country_name?.toLowerCase()).map((city: ICityObject) => city);
+
+  return returnValueOrFalse(filteredCities);
+};
+//----------------------------------------------//
