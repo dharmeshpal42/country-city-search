@@ -64,7 +64,7 @@ function processJsonData(jsonData: any) {
  * @param cityName
  * @returns
  */
-export async function searchCityByName(cityName: string): Promise<any[]> {
+export async function searchCityByName(cityName: string): Promise<ICityObject[]> {
   const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
 
   const lowerCaseCityName = cityName.toLowerCase();
@@ -83,7 +83,7 @@ export async function searchCityByName(cityName: string): Promise<any[]> {
  * @returns
  */
 
-export async function getAllCountries(): Promise<any> {
+export async function getAllCountries(): Promise<string[]> {
   const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
   const data = getCountryNamesWithCodes(jsonData);
   return data;
@@ -97,7 +97,7 @@ export async function getAllCountries(): Promise<any> {
  * @returns
  */
 
-export const getCityByNameAndCountryData = async (countryData: countryData) => {
+export const getCityByNameAndCountryData = async (countryData: countryData): Promise<ICityObject> => {
   const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
 
   const { cityName, state_name, country_name } = countryData;
@@ -117,7 +117,7 @@ export const getCityByNameAndCountryData = async (countryData: countryData) => {
  * @returns
  */
 
-export const getCitiesByStateAndCountry = async (state_name: string, country_name: string) => {
+export const getCitiesByStateAndCountry = async (state_name: string, country_name: string): Promise<ICityObject[]> => {
   const jsonData = await fetchDataAndProcess();
 
   const filteredCities = jsonData.filter((city: ICityObject) => city?.state_name?.toLowerCase() === state_name?.toLowerCase() && city?.country_name?.toLowerCase() === country_name?.toLowerCase()).map((city: ICityObject) => city);
