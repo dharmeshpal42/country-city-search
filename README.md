@@ -1,4 +1,4 @@
-# World Data Package
+# Country-City-Search
 
 A Project to get Data about the country cities and states accroding the request
 
@@ -7,17 +7,7 @@ A Project to get Data about the country cities and states accroding the request
 Install world data package with npm
 
 ```bash
-  npm install --save-dev @types/node
-  npm install
-  npm run build
-  npm start
-```
-
-- When you change into code base every time you have to run this command to get updated output
-
-```bash
- npm run build
- npm start
+  npm i country-city-search
 ```
 
 ## Features
@@ -25,8 +15,59 @@ Install world data package with npm
 - Get all countries names accross the world in single array
 - Get exact city using country,state,city name
 - Get All cities in particular state using country name and state name
-- Search city by its name
+- Search city by it's name
 - Cross platform usable for frontend and backend
+
+## Usage/Examples
+
+```javascript
+import { getAllCountries, getCitiesByStateAndCountry, getCityByNameAndCountryData, searchCityByName } from "country-city-search";
+
+const Home = () => {
+  const fetchData = async () => {
+    //Get All Countries Name with country code in single array
+
+    const allCountries = await getAllCountries();
+    //------------------------------------------------------
+
+    //Get City object using city name, state name and country name
+
+    const cityObject = await getCityByNameAndCountryData({
+      cityName: "rajkot",
+      state_name: "gujarat",
+      country_name: "India",
+    });
+
+    //------------------------------------------------------------
+
+    //Get List array of cities object using state and country name
+
+    const allCitiesFromState = await getCitiesByStateAndCountry("gujarat", "India");
+    //------------------------------------------------------------
+
+    //Search City by it's Name
+
+    const city = await searchCityByName("ahmedabad");
+
+    //------------------------------------------------------------
+  };
+
+  useEffect(() => {
+    fetchData();
+  });
+
+  return (
+    <>
+      <div> Simple Examples for country-city-search package</div>
+    </>
+  );
+};
+```
+
+## Package Enhancement Suggestions
+
+- Please identify any additional functionalities or data types that would enhance the package.
+- Kindly suggest any further functionalities or data types to be integrated into the package.
 
 ## Author
 

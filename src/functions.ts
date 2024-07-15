@@ -58,7 +58,12 @@ function processJsonData(jsonData: any) {
 }
 //----------------------------------------------//
 
-// Search City by it's Name
+/**
+ *
+ * Search City by it's Name
+ * @param cityName
+ * @returns
+ */
 export async function searchCityByName(cityName: string): Promise<any[]> {
   const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
 
@@ -73,7 +78,10 @@ export async function searchCityByName(cityName: string): Promise<any[]> {
 
 //----------------------------------------------//
 
-//Get All Country's Name in single array with country code
+/**
+ * Get All Country's Name in single array with country code
+ * @returns
+ */
 
 export async function getAllCountries(): Promise<any> {
   const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
@@ -83,7 +91,11 @@ export async function getAllCountries(): Promise<any> {
 
 //----------------------------------------------//
 
-//Get City object using city name, state name and country name
+/**
+ * Get City object using city name, state name and country name
+ * @param countryData
+ * @returns
+ */
 
 export const getCityByNameAndCountryData = async (countryData: countryData) => {
   const jsonData = await fetchDataAndProcess(); // Wait for jsonData to be fetched
@@ -98,7 +110,12 @@ export const getCityByNameAndCountryData = async (countryData: countryData) => {
 };
 //----------------------------------------------//
 
-// Get List array of cities object using state and country name
+/**
+ * Get List array of cities object using state and country name
+ * @param state_name
+ * @param country_name
+ * @returns
+ */
 
 export const getCitiesByStateAndCountry = async (state_name: string, country_name: string) => {
   const jsonData = await fetchDataAndProcess();
