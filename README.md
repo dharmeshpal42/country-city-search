@@ -1,6 +1,6 @@
 # Country-City-Search
 
-A Project to get Data about the country cities and states accroding the request
+A Project to get Data about the country cities and states according the request.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Install world data package with npm
 
 ## Features
 
-- Get all countries names accross the world in single array
+- Get all countries names across the world in single array
 - Get exact city using country,state,city name
 - Get All cities in particular state using country name and state name
 - Search city by it's name
