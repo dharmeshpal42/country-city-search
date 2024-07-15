@@ -30,7 +30,7 @@ async function fetchDataAndProcess() {
   isFetching = true;
 
   try {
-    const url = "https://country-city-search.s3.eu-north-1.amazonaws.com/data.csv";
+    const url = "https://country-city-search.s3.eu-north-1.amazonaws.com/country-city-search.csv";
     const response = await fetch(url, {
       headers: {
         "Content-Type": "text/csv",
