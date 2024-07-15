@@ -28,6 +28,8 @@ const Home = () => {
     //Get All Countries Name with country code in single array
 
     const allCountries = await getAllCountries();
+
+    // Output : ['Afghanistan (AF)', 'Albania (AL)',....]
     //------------------------------------------------------
 
     //Get City object using city name, state name and country name
@@ -38,16 +40,71 @@ const Home = () => {
       country_name: "India",
     });
 
+    /*Output :
+     {
+        country_code: "IN";
+        country_id: "101";
+        country_name: "India";
+        id: "133679";
+        latitude: "22.33333000";
+        longitude: "70.83333000";
+        name: "Rajkot";
+        state_code: "GJ";
+        state_id: "4030";
+        state_name: "Gujarat";
+        time_zone_name: "Asia/Kolkata";
+        wikiDataId: "Q11854";
+      }
+*/
     //------------------------------------------------------------
 
     //Get List array of cities object using state and country name
 
     const allCitiesFromState = await getCitiesByStateAndCountry("gujarat", "India");
+
+    /*
+    Output : 
+    {
+      "id": "57588",
+      "name": "Abrama",
+      "state_id": "4030",
+      "state_code": "GJ",
+      "state_name": "Gujarat",
+      "country_id": "101",
+      "country_code": "IN",
+      "country_name": "India",
+      "latitude": "20.85865000",
+      "longitude": "72.90648000",
+      "wikiDataId": "Q490916",
+      "time_zone_name": "Asia/Kolkata"
+    }
+    */
     //------------------------------------------------------------
 
     //Search City by it's Name
 
     const city = await searchCityByName("ahmedabad");
+
+    /*
+    Output :
+        [
+         {
+           "id": "57606",
+           "name": "Ahmedabad",
+           "state_id": "4030",
+           "state_code": "GJ",
+           "state_name": "Gujarat",
+           "country_id": "101",
+           "country_code": "IN",
+           "country_name": "India",
+           "latitude": "23.02579000",
+           "longitude": "72.58727000",
+           "wikiDataId": "Q1070",
+           "time_zone_name": "Asia/Kolkata"
+          }, ...
+        ]
+
+    */
 
     //------------------------------------------------------------
   };

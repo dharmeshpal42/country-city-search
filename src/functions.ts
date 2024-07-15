@@ -111,7 +111,7 @@ export const getCityByNameAndCountryData = async (countryData: countryData) => {
 //----------------------------------------------//
 
 /**
- * Get List array of cities object using state and country name
+ * Get List array of cities objects using state and country name
  * @param state_name
  * @param country_name
  * @returns
