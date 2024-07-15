@@ -4,7 +4,7 @@ A Project to get Data about the country cities and states according the request.
 
 ## Installation
 
-Install world data package with npm
+Install country city search with npm
 
 ```bash
   npm i country-city-search
