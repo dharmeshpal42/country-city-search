@@ -9,14 +9,21 @@ import { stringify } from "csv-stringify/sync";
 
 import fs from "fs";
 
-const cityFile = "./cities.csv";
-const stateFile = "./states.csv";
-const countryFile = "./countries.csv";
-const outputFile = "updated.csv";
+// const cityFile = "./cities.csv";
+// const stateFile = "./states.csv";
+// const countryFile = "./countries.csv";
+// const outputFile = "updated.csv";
 
-let cities = [] as any;
-let states = {} as any;
-let countries = {} as any;
+const firstFile = "./data.csv";
+const secondFile = "./updated.csv";
+const outputFile = "combined.csv";
+
+// let cities = [] as any;
+// let states = {} as any;
+// let countries = {} as any;
+// let combinedData = [] as any;
+
+let secondFileData = {} as any;
 let combinedData = [] as any;
 
 const readCSV = (filePath: string) => {
@@ -29,65 +36,59 @@ const readCSV = (filePath: string) => {
       .on("error", (error: any) => reject(error));
   });
 };
-Promise.all([readCSV(cityFile), readCSV(stateFile), readCSV(countryFile)])
-  .then(([cityData, stateData, countryData]: any) => {
+Promise.all([readCSV(firstFile), readCSV(secondFile)])
+  .then(([firstData, secondData]: any) => {
+    console.log(secondData[0]);
+
     // Process state and country data
-    stateData.forEach((state: any) => {
-      states[state.state_code] = state;
+    secondData.forEach((country: any) => {
+      secondFileData[country.country_code] = country;
     });
+    // console.log("secondData.forEach  ~ secondFileData:", secondFileData);
 
-    countryData.forEach((country: any) => {
-      countries[country.iso2] = country;
-    });
+    firstData.forEach((item: any) => {
+      const countryName = item.country_name;
+      const countryCode = item.country_code;
+      const country = secondFileData[countryCode];
 
-    // Process city data and combine with state and country data
-    cityData.forEach((city: any) => {
-      const cityStateCode = city.state_code;
-      const cityName = city.name;
-
-      if (cityStateCode && cityName) {
-        const state = states[cityStateCode];
-
-        if (state && state.state_code === cityStateCode) {
-          const country = countries[state.country_code];
-
-          if (country) {
-            combinedData.push({
-              city_name: city.name,
-              state_name: state.name,
-              country_name: country.name,
-              ...city,
-              ...state,
-              ...country,
-            });
-          }
-        }
+      if (country && country.country_name === countryName) {
+        const combinedObject = {
+          ...item,
+          emoji: country.emoji,
+          currency_symbol: country.currency_symbol,
+        };
+        combinedData.push(combinedObject);
       }
     });
 
-    const csvString = stringify(
-      combinedData.map((data: any) => {
-        delete data.id;
-        delete data.state_id;
-        delete data.country_id;
-        delete data.name;
-        delete data.iso2;
-        delete data.numeric_code;
-        delete data.currency_name;
-        delete data.tld;
-        delete data.region_id;
-        delete data.subregion;
-        delete data.currency;
-        delete data.subregion_id;
-        delete data.nationality;
-        delete data.region;
+    console.log("firstData.forEach  ~ combinedData:", combinedData);
+    // const csvString = stringify(
+    //   combinedData.map((data: any) => {
+    //     delete data.id;
+    //     delete data.state_id;
+    //     delete data.country_id;
+    //     delete data.name;
+    //     delete data.iso2;
+    //     delete data.numeric_code;
+    //     delete data.currency_name;
+    //     delete data.tld;
+    //     delete data.region_id;
+    //     delete data.subregion;
+    //     delete data.currency;
+    //     delete data.subregion_id;
+    //     delete data.nationality;
+    //     delete data.region;
 
-        return data;
-      }),
-      {
-        header: true,
-      }
-    );
+    //     return data;
+    //   }),
+    //   {
+    //     header: true,
+    //   }
+    // );
+
+    const csvString = stringify(combinedData, {
+      header: true,
+    });
 
     // Write combined data to a JSON file
     fs.writeFile(outputFile, csvString, (err: any) => {
