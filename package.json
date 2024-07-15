@@ -1,7 +1,7 @@
 {
   "name": "country-city-search",
   "description": "The process of accessing and utilizing country and city information programmatically, making it a valuable tool for developers working with geographic data in their projects.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "type": "module",
