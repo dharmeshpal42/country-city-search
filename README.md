@@ -64,7 +64,7 @@ const Home = () => {
 
     /*
     Output : 
-    {
+    [{
       "id": "57588",
       "name": "Abrama",
       "state_id": "4030",
@@ -77,7 +77,7 @@ const Home = () => {
       "longitude": "72.90648000",
       "wikiDataId": "Q490916",
       "time_zone_name": "Asia/Kolkata"
-    }
+    }....]
     */
     //------------------------------------------------------------
 
