@@ -18,3 +18,28 @@ export const getCountryNamesWithCodes = (data: ICityObject[]): string[] => {
 
   return Array.from(countrySet);
 };
+
+export const csvToJson = (csvString: string) => {
+  const lines = csvString.split("\n");
+  const result = [];
+
+  // Extract headers from the first line
+  const headers = lines[0].split(",");
+
+  // Process each line, skipping the first line (headers)
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line) {
+      // Skip empty lines
+      const obj = {} as any;
+      const currentLine = line.split(",");
+
+      for (let j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentLine[j];
+      }
+      result.push(obj);
+    }
+  }
+
+  return result;
+};
