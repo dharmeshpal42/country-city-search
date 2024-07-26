@@ -1,62 +1,5 @@
-import { csvToJson, getCountryNamesWithCodes, returnValueOrFalse } from "./constants/constant";
-import { ICityObject, countryData } from "./types";
-
-let fetchedData: any = null; // Flag to store fetched data
-let isFetching = false;
-
-// Fetch Data by CSV
-
-async function fetchDataAndProcess() {
-  if (fetchedData !== null) {
-    // If data is already fetched, return it
-    return fetchedData;
-  }
-
-  if (isFetching) {
-    // If fetching is in progress, wait for it to complete
-    return new Promise((resolve, reject) => {
-      const interval = setInterval(() => {
-        if (fetchedData !== null) {
-          clearInterval(interval);
-          resolve(fetchedData);
-        } else if (!isFetching) {
-          clearInterval(interval);
-          reject(new Error("Fetching failed"));
-        }
-      }, 100);
-    });
-  }
-
-  isFetching = true;
-
-  try {
-    const url = "https://country-city-search.s3.eu-north-1.amazonaws.com/country-city-search.csv";
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "text/csv",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.statusText}`);
-    }
-
-    const csvData = await response.text();
-    const parsedData = csvToJson(csvData);
-    fetchedData = processJsonData(parsedData);
-    return fetchedData;
-  } catch (error) {
-    console.error("Error fetching or parsing JSON:", error);
-    throw error;
-  } finally {
-    isFetching = false;
-  }
-}
-function processJsonData(jsonData: any) {
-  // Process jsonData here if needed
-  return jsonData;
-}
-//----------------------------------------------//
+import { fetchDataAndProcess, fetchDataFromJson, getCountryNamesWithCodes, returnValueOrFalse } from "./constants/constant";
+import { ICityObject, ICountriesObject, countryData } from "./types";
 
 /**
  *
@@ -125,3 +68,50 @@ export const getCitiesByStateAndCountry = async (state_name: string, country_nam
   return returnValueOrFalse(filteredCities);
 };
 //----------------------------------------------//
+
+/**
+ * Get Country Details from the country code
+ * @param countryCode
+ * @returns
+ */
+export const getCountryByCode = async (countryCode: string) => {
+  const countryData = await fetchDataFromJson();
+
+  const country = countryData
+    .filter((item: ICountriesObject) => item.iso2 === countryCode)
+    .map((cObj: ICountriesObject) => {
+      const { states, ...rest } = cObj; // Destructure to remove states
+      return rest;
+    });
+  return returnValueOrFalse(country);
+};
+//----------------------------------------------//
+
+/**
+ * Get All States List from the country code
+ * @param countryCode
+ * @returns
+ */
+export const getStatesOfCountry = async (countryCode: string) => {
+  const countryData = await fetchDataFromJson();
+
+  const country = countryData
+    .filter((item: ICountriesObject) => item.iso2 === countryCode)
+    .map((cObj: ICountriesObject) => cObj.states)
+    .flat();
+
+  return returnValueOrFalse(country);
+};
+//----------------------------------------------//
+
+/**
+ * Get Cities data from using stateCode
+ * @param stateCode
+ * @returns
+ */
+export const getAllCitiesOfState = async (stateCode: string) => {
+  const jsonData = await fetchDataAndProcess();
+  const cities = jsonData.filter((city: ICityObject) => city.state_code === stateCode).map((city: ICityObject) => city);
+
+  return returnValueOrFalse(cities);
+};

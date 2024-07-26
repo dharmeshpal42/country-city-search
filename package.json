@@ -1,7 +1,7 @@
 {
   "name": "country-city-search",
   "description": "The process of accessing and utilizing country and city information programmatically, making it a valuable tool for developers working with geographic data in their projects.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "type": "module",
@@ -15,7 +15,26 @@
     "start": "node ./dist/index.js"
   },
   "keywords": [
-    "test"
+    "Country-city-search",
+    "Country city search",
+    "City search by country",
+    "Country search by city",
+    "Geographic search",
+    "Location lookup",
+    "City finder",
+    "Country finder",
+    "City data API",
+    "Country data API",
+    "City and country database",
+    "Location database",
+    "Geography search tool",
+    "City-country mapping",
+    "Country-city mapping",
+    "City list by country",
+    "Country list by city",
+    "World cities search",
+    "International cities search",
+    "Country lookup"
   ],
   "author": "Dharmesh pal",
   "license": "MIT",
